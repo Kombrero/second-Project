@@ -15,19 +15,19 @@ let timeD;
 
 const timeDay = () => {
     if (nowHours > 5 && nowHours < 10) {
-        timeD = 'утро';
+        timeD = ' Доброе утро';
     } else if (nowHours > 10 && nowHours < 18) {
-        timeD = 'день';
+        timeD = 'Добрый день';
     } else if (nowHours > 18 && nowHours < 22) {
-        timeD = 'вечер';
+        timeD = 'Добрый вечер';
     } else {
-        timeD = 'ночи';
+        timeD = 'Доброй ночи';
     }
 };
 timeDay();
 
 
-document.write('Добрый ' +  timeD + '<br>' +
+document.write(timeD + '<br>' +
  // eslint-disable-next-line max-len
  ' Сегодня: ' + todayWeekDay + '<br>' + ' Текущее время: ' + nowHours + ':' + nowMinutes + ':' + nowSeconds + '<br>' + 'До нового года осталось: ' + beforeNewYear + ' дней');
 
