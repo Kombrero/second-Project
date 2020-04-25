@@ -91,7 +91,9 @@ window.addEventListener('DOMContentLoaded', () => {
                     }
                 }, 5);
 
-            }
+            }else{
+				popup.style.display = 'block';
+			}
 
         };
 
