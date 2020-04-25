@@ -53,9 +53,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const toggleMenu = () => {
 
         const btnMenu = document.querySelector('.menu'),
-            menu = document.querySelector('menu'),
-            closeBtn = document.querySelector('.close-btn'),
-            menuItem = document.querySelectorAll('ul>li');
+            menu = document.querySelector('menu');
 
         const handlerMenu = () => {
             menu.classList.toggle('active-menu');
@@ -63,9 +61,17 @@ window.addEventListener('DOMContentLoaded', () => {
 
         btnMenu.addEventListener('click', handlerMenu);
 
-        closeBtn.addEventListener('click', handlerMenu);
+        menu.addEventListener('click', event => {
+            const target = event.target;
+            console.log(target);
 
-        menuItem.forEach(elem => elem.addEventListener('click', handlerMenu));
+            if (target.classList.contains('close-btn')) {
+                handlerMenu();
+            } else if (target.closest('ul')) {
+                handlerMenu();
+            }
+        });
+
     };
 
     toggleMenu();
@@ -73,17 +79,15 @@ window.addEventListener('DOMContentLoaded', () => {
     //popup
 
     const togglePopup = () => {
-        const popup = document.querySelector('.popup'),
-            popupBtn = document.querySelectorAll('.popup-btn'),
-            popupClose = document.querySelector('.popup-close');
-
+        const popUp = document.querySelector('.popup'),
+            popupBtn = document.querySelectorAll('.popup-btn');
 
         const popupOp = () => {
             if (screen.width > 768) {
                 let count = 0;
                 const opInterval = setInterval(() => {
-                    popup.style.display = 'block';
-                    popup.style.opacity = count;
+                    popUp.style.display = 'block';
+                    popUp.style.opacity = count;
                     count += 0.01;
 
                     if (count >= 1) {
@@ -91,19 +95,106 @@ window.addEventListener('DOMContentLoaded', () => {
                     }
                 }, 5);
 
-            }else{
-				popup.style.display = 'block';
-			}
+            } else {
+                popUp.style.display = 'block';
+            }
 
         };
-
 
         popupBtn.forEach(elem => {
             elem.addEventListener('click', popupOp);
         });
-        popupClose.addEventListener('click', () => popup.style.display = 'none');
+
+        popUp.addEventListener('click', event => {
+            let target = event.target;
+
+            if (target.classList.contains('popup-close')) {
+                popUp.style.display = 'none';
+            } else {
+                target = target.closest('.popup-content');
+
+                if (!target) {
+                    popUp.style.display = 'none';
+                }
+            }
+        });
     };
 
     togglePopup();
+
+    // Табы
+
+    const tabs = () => {
+        const tabHeader = document.querySelector('.service-header'),
+            tab = tabHeader.querySelectorAll('.service-header-tab'),
+            tabContent = document.querySelectorAll('.service-tab');
+
+        const toggleTabContent = index => {
+            for (let i = 0; i < tabContent.length; i++) {
+                if (index === i) {
+                    tab[i].classList.add('active');
+                    tabContent[i].classList.remove('d-none');
+                } else {
+                    tab[i].classList.remove('active');
+                    tabContent[i].classList.add('d-none');
+                }
+            }
+        };
+
+
+        tabHeader.addEventListener('click', event => {
+            let target = event.target;
+            target = target.closest('.service-header-tab');
+            if (target) {
+                // eslint-disable-next-line no-loop-func
+                tab.forEach((item, i) => {
+
+                    if (item === target) {
+                        toggleTabContent(i);
+                    }
+
+                });
+
+            }
+        });
+    };
+
+    tabs();
 });
+
+
+
+
+
+
+
+
+
+
+
+// /* Делегирование */
+//     const buttons = document.querySelectorAll('.button'),
+//         content = document.querySelector('.content');
+
+//     const ChangeText = (elem) => {
+//         content.textContent = elem.textContent;
+//     };
+
+//     for(i=0; i < buttons.length; i++){
+//         buttons[i].addEventListener('click', () => {
+//             ChangeText(buttons[i]);
+//         });
+//     }
+
+//     function addButton(){
+//         const newButton = buttons[0].cloneNode();
+//         let textButton = buttons.length + 1;
+//         if(textButton < 10) {
+//             textButton = '0${textButton}';
+
+//             newButton.textContent = textButton;
+//             wrap
+//         }
+//     }
+
 
