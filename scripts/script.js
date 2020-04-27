@@ -177,9 +177,6 @@ window.addEventListener('DOMContentLoaded', () => {
             for (let i = 0; i < slide.length; i++) {
                 dot[i] = document.createElement('li');
                 dot[i].classList.add('dot');
-
-
-                console.log(dot);
                 dotUl.append(dot[i]);
             }
             return dot;
@@ -271,4 +268,39 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     slider();
+
+    //Смена картинок
+    let firstImg;
+    const comandContainer = document.querySelector('.command'),
+        comandPerson = comandContainer.querySelectorAll('img');
+    comandPerson.forEach(elem => {
+        elem.addEventListener('mouseover', event => {
+            firstImg = event.target.src;
+            event.target.src = event.target.dataset.img;
+            //event.target.dataset.img = event.target.src.replace(/[a].jpg/g, '.jpg');
+        });
+
+        elem.addEventListener('mouseout', event => {
+            event.target.src = firstImg;
+        });
+    });
+    console.log(comandPerson);
+
+    //Калькулятор
+
+    const calcBlock = document.querySelector('.calc-block'),
+        calcInput = calcBlock.querySelectorAll('input');
+    console.log(calcInput);
+
+
+    calcInput.forEach(elem => {
+
+        elem.addEventListener('input', () => {
+
+            elem.value = elem.value.replace(/\D/gi, ' ');
+            console.log(elem.value);
+        });
+
+        console.log(elem);
+    });
 });
