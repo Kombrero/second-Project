@@ -18,7 +18,12 @@ window.addEventListener('DOMContentLoaded', () => {
                 minutes = Math.floor((timeRemaining / 60) % 60),
                 hours = Math.floor(timeRemaining / 60 / 60);
 
-            return { timeRemaining, hours, minutes, seconds };
+            return {
+                timeRemaining,
+                hours,
+                minutes,
+                seconds
+            };
         }
 
         function updateClock() {
@@ -35,8 +40,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     timerHours.textContent = timer.hours < 10 ? '0' + timer.hours : timer.hours;
                     timerMinutes.textContent = timer.minutes < 10 ? '0' + timer.minutes : timer.minutes;
                     timerSeconds.textContent = timer.seconds < 10 ? '0' + timer.seconds : timer.seconds;
-                }
-                , 1000);
+                }, 1000);
             } else {
                 timerHours.textContent = '00';
                 timerMinutes.textContent = '00';
@@ -283,13 +287,11 @@ window.addEventListener('DOMContentLoaded', () => {
             event.target.src = firstImg;
         });
     });
-    console.log(comandPerson);
 
     //Калькулятор ввод
 
     const calcBlock = document.querySelector('.calc-block'),
         calcInput = calcBlock.querySelectorAll('input');
-    console.log(calcInput);
 
 
     calcInput.forEach(elem => {
@@ -322,9 +324,9 @@ window.addEventListener('DOMContentLoaded', () => {
                 countValue += (calcCount.value - 1) / 10;
             }
 
-            if(calcDay && calcDay.value < 5 ){
+            if (calcDay && calcDay.value < 5) {
                 dayValue *= 2;
-            }else if (calcDay && calcDay.value < 10){
+            } else if (calcDay && calcDay.value < 10) {
                 dayValue *= 1.5;
             }
 
@@ -333,7 +335,7 @@ window.addEventListener('DOMContentLoaded', () => {
             }
 
 
-            totalValue.textContent = total;
+            totalValue.textContent = Math.floor(total);
         };
 
 
@@ -348,4 +350,90 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     calc(100);
+
+    // send-ajax-form
+
+    const form1 = document.getElementById('form1'),
+        form2 = document.getElementById('form2'),
+        form3 = document.getElementById('form3');
+
+    const sendForm = form => {
+        const errorMessage = 'Что-то пошло не так',
+            loadMessage = 'Загрузка ...',
+            successMessage = 'Спасибо! Мы скоро с вами свяжемся';
+
+        const statusMessagge = document.createElement('div');
+        statusMessagge.style.cssText = 'font-size: 2rem; color: blue;';
+
+        form.addEventListener('submit', event => {
+            event.preventDefault();
+            form.appendChild(statusMessagge);
+
+            const request = new XMLHttpRequest();
+
+            request.addEventListener('readystatechange', () => {
+                statusMessagge.textContent = loadMessage;
+
+                if (request.readyState !== 4) {
+                    return;
+                }
+                if (request.status === 200) {
+                    statusMessagge.textContent = successMessage;
+                } else {
+                    statusMessagge.textContent = errorMessage;
+                }
+            });
+
+            request.open('POST', 'server.php');
+            request.setRequestHeader('Content-Type', 'application/json');
+            const formData = new FormData(form);
+            const body = {};
+
+            formData.forEach((val, key) => {
+                body[key] = val;
+            });
+
+            console.log(body);
+
+            request.send(JSON.stringify(body));
+
+            const input = form.querySelectorAll('input');
+            input.forEach(elem => {
+                elem.value = '';
+            });
+
+        });
+    };
+
+    sendForm(form1);
+    sendForm(form2);
+    sendForm(form3);
+
+    // Запрет ввода
+
+    const inputSimbol = form => {
+        const input = form.querySelectorAll('input');
+        for (let i = 0; i < input.length; i++) {
+            input[0].addEventListener('input', () => {
+                input[0].value = input[0].value.replace(/[^а-я ]/gi, '');
+            });
+
+            input[2].addEventListener('change', () => {
+                input[2].value = input[2].value.replace(/[^0-9+]/gi, '');
+            });
+
+            if (input[3]) {
+                input[3].addEventListener('input', () => {
+                    input[3].value = input[3].value.replace(/[^а-я ]/gi, '');
+                });
+            }
+
+        }
+    };
+
+    inputSimbol(form1);
+    inputSimbol(form2);
+    inputSimbol(form3);
+
+    //Validato
 });
