@@ -382,6 +382,10 @@ window.addEventListener('DOMContentLoaded', () => {
                 } else {
                     statusMessagge.textContent = errorMessage;
                 }
+
+                if (statusMessagge.textContent === successMessage) {
+                    setTimeout(() => statusMessagge.remove(), 5000);
+                }
             });
 
             request.open('POST', 'server.php');
@@ -411,29 +415,191 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Запрет ввода
 
-    const inputSimbol = form => {
-        const input = form.querySelectorAll('input');
-        for (let i = 0; i < input.length; i++) {
-            input[0].addEventListener('input', () => {
-                input[0].value = input[0].value.replace(/[^а-я ]/gi, '');
+    const inputSimbol = () => {
+        const inputName = document.querySelectorAll('.form-name'),
+            inputFooterName = document.getElementById('form2-name'),
+            inputMess = document.querySelector('.mess');
+
+        inputName.forEach(elem => {
+            elem.addEventListener('input', () => {
+                console.log(elem);
+                elem.value = elem.value.replace(/[^а-я ]/gi, '');
             });
+            console.log(elem);
+        });
 
-            input[2].addEventListener('change', () => {
-                input[2].value = input[2].value.replace(/[^0-9+]/gi, '');
-            });
+        inputFooterName.addEventListener('input', () => inputFooterName.value = inputFooterName.value.replace(/[^а-я ]/gi, ''));
 
-            if (input[3]) {
-                input[3].addEventListener('input', () => {
-                    input[3].value = input[3].value.replace(/[^а-я ]/gi, '');
-                });
-            }
 
-        }
+        inputMess.addEventListener('input', () => {
+            inputMess.value = inputMess.value.replace(/[^а-я ]/gi, '');
+        });
+
     };
 
-    inputSimbol(form1);
-    inputSimbol(form2);
-    inputSimbol(form3);
+    inputSimbol();
 
-    //Validato
+    const validPhone = form => {
+        const inputPhone = form.querySelector('.form-phone');
+
+
+        inputPhone.addEventListener('change', () => {
+            const valInp = inputPhone.value.replace(/[^0-9+]+/gi, '');
+            const errorDiv = document.createElement('div');
+            errorDiv.textContent = 'Ошибка в этом поле';
+            errorDiv.style.cssText = 'color: red;';
+            errorDiv.classList.add('validator-error');
+            if (inputPhone.value === valInp) {
+                console.log(valInp);
+                if (errorDiv) {
+                    inputPhone.nextElementSibling.remove('validator-error');
+                }
+            } else {
+
+                inputPhone.insertAdjacentElement('afterend', errorDiv);
+
+            }
+        });
+
+    };
+    validPhone(form1);
+    validPhone(form2);
+    validPhone(form3);
+
+    //Validator
+
+    // class Validator {
+    //     constructor({ selector, pattern = {}, method }) {
+    //         this.selector = document.querySelectorAll(selector);
+    //         this.pattern = pattern;
+    //         this.method = method;
+    //         console.log(this.selector);
+    //         this.form = document.querySelectorAll('form');
+    //         this.error = new Set();
+    //     }
+    //     init() {
+    //         this.form.forEach(el => {
+    //             el.addEventListener('submit', e => {
+    //                 e.preventDefault();
+    //                 this.selector.forEach(elem => this.checkIt({ target: elem }));
+    //                 if (this.error.size !== 0) {
+    //                     e.preventDefault();
+    //                 }
+    //             });
+    //         });
+    //         this.applyStyle();
+    //         this.setPattern();
+    //         this.selector.forEach(elem => elem.addEventListener('change', this.checkIt.bind(this)));
+
+    //     }
+
+    //     isValid(elem) {
+    //         const validatorMethod = {
+    //             notEmpty(elem) {
+    //                 if (elem.value.trim() === '') {
+    //                     return  false;
+    //                 }
+    //                 return true;
+    //             },
+
+    //             patterns(elem, pattern) {
+    //                 return pattern.test(elem.value);
+    //             }
+    //         };
+
+    //         if (this.method) {
+    //             const method = this.method[elem.id];
+    //             if (method) {
+    //                 return method.every(item => {
+    //                     validatorMethod[item[0]](elem, this.pattern[item[1]]);
+    //                 });
+    //             }
+
+    //         } else {
+    //             console.warn('Необходимо передать ID полей ввода и методы проверки этих полей');
+    //         }
+    //     }
+
+
+    //     checkIt(event) {
+
+    //         const target = event.target;
+    //         console.log(target);
+
+    //         if (this.pattern.phone === /\d/) {
+    //             this.showSuccess(target);
+    //             this.error.delete(target);
+    //             console.log(this.error);
+    //         } else {
+    //             this.showError(target);
+    //             this.error.add(target);
+    //             console.log(this.error);
+    //         }
+
+    //     }
+
+
+    //     showError(elem) {
+    //         elem.classList.remove('success');
+    //         elem.classList.add('error');
+    //         if (elem.nextElementSibling && elem.nextElementSibling.classList.contains('validator-error')) {
+    //             return;
+    //         }
+    //         const errorDiv = document.createElement('div');
+    //         errorDiv.textContent = 'Ошибка в этом поле';
+    //         errorDiv.classList.add('validator-error');
+    //         elem.insertAdjacentElement('afterend', errorDiv);
+    //     }
+
+    //     showSuccess(elem) {
+    //         elem.classList.remove('error');
+    //         elem.classList.add('success');
+
+    //         if (elem.nextElementSibling && elem.nextElementSibling.classList.contains('validator-error')) {
+    //             elem.nextElementSibling.remove('validator-error');
+    //         }
+    //     }
+
+
+    //     applyStyle() {
+    //         const style = document.createElement('style');
+    //         style.textContent = `
+    //         input.success {
+    //             border: 2px solid green
+    //         }
+    //         input.error {
+    //             border: 2px solid red
+    //         }
+    //         .validator-error{
+    //             font-size: 12px;
+    //             font-family: sans-serif;
+    //             color: red
+    //         }
+    //         `;
+    //         document.head.appendChild(style);
+    //     }
+    //     setPattern() {
+    //         if (!this.pattern.phone) {
+    //             this.pattern.phone = /\d/;
+    //         }
+
+    //         console.log(this.pattern);
+    //     }
+    // }
+
+    // const valid = new Validator({
+    //     selector: '.form-phone',
+    //     pattern: {
+    //         //phone: /[0-9+]/
+    //     },
+    //     method: {
+    //         'phone': [
+    //             ['notEmpty'],
+    //             ['pattern', 'phone']
+
+    //         ]
+    //     }
+    // });
+
+    // valid.init();
 });
