@@ -358,55 +358,59 @@ window.addEventListener('DOMContentLoaded', () => {
         form3 = document.getElementById('form3');
 
     const sendForm = form => {
-        const errorMessage = 'Что-то пошло не так',
-            loadMessage = 'Загрузка ...',
-            successMessage = 'Спасибо! Мы скоро с вами свяжемся';
+        new Promise(() => {
 
-        const statusMessagge = document.createElement('div');
-        statusMessagge.style.cssText = 'font-size: 2rem; color: blue;';
+            const errorMessage = 'Что-то пошло не так',
+                loadMessage = 'Загрузка ...',
+                successMessage = 'Спасибо! Мы скоро с вами свяжемся';
 
-        form.addEventListener('submit', event => {
-            event.preventDefault();
-            form.appendChild(statusMessagge);
+            const statusMessagge = document.createElement('div');
+            statusMessagge.style.cssText = 'font-size: 2rem; color: blue;';
 
-            const request = new XMLHttpRequest();
+            form.addEventListener('submit', event => {
+                event.preventDefault();
+                form.appendChild(statusMessagge);
 
-            request.addEventListener('readystatechange', () => {
-                statusMessagge.textContent = loadMessage;
+                const request = new XMLHttpRequest();
 
-                if (request.readyState !== 4) {
-                    return;
-                }
-                if (request.status === 200) {
-                    statusMessagge.textContent = successMessage;
-                } else {
-                    statusMessagge.textContent = errorMessage;
-                }
+                request.addEventListener('readystatechange', () => {
+                    statusMessagge.textContent = loadMessage;
 
-                if (statusMessagge.textContent === successMessage) {
-                    setTimeout(() => statusMessagge.remove(), 5000);
-                }
+                    if (request.readyState !== 4) {
+                        return;
+                    }
+                    if (request.status === 200) {
+                        statusMessagge.textContent = successMessage;
+                    } else {
+                        statusMessagge.textContent = errorMessage;
+                    }
+
+                    if (statusMessagge.textContent === successMessage) {
+                        setTimeout(() => statusMessagge.remove(), 5000);
+                    }
+                });
+
+                request.open('POST', 'server.php');
+                request.setRequestHeader('Content-Type', 'application/json');
+                const formData = new FormData(form);
+                const body = {};
+
+                formData.forEach((val, key) => {
+                    body[key] = val;
+                });
+
+                console.log(body);
+
+                request.send(JSON.stringify(body));
+
+                const input = form.querySelectorAll('input');
+                input.forEach(elem => {
+                    elem.value = '';
+                });
+
             });
-
-            request.open('POST', 'server.php');
-            request.setRequestHeader('Content-Type', 'application/json');
-            const formData = new FormData(form);
-            const body = {};
-
-            formData.forEach((val, key) => {
-                body[key] = val;
-            });
-
-            console.log(body);
-
-            request.send(JSON.stringify(body));
-
-            const input = form.querySelectorAll('input');
-            input.forEach(elem => {
-                elem.value = '';
-            });
-
         });
+
     };
 
     sendForm(form1);
@@ -430,7 +434,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
         inputFooterName.addEventListener('input', () => inputFooterName.value = inputFooterName.value.replace(/[^а-я ]/gi, ''));
 
-
         inputMess.addEventListener('input', () => {
             inputMess.value = inputMess.value.replace(/[^а-я ]/gi, '');
         });
@@ -442,7 +445,6 @@ window.addEventListener('DOMContentLoaded', () => {
     const validPhone = form => {
         const inputPhone = form.querySelector('.form-phone');
 
-
         inputPhone.addEventListener('change', () => {
             const valInp = inputPhone.value.replace(/[^0-9+]+/gi, '');
             const errorDiv = document.createElement('div');
@@ -451,12 +453,16 @@ window.addEventListener('DOMContentLoaded', () => {
             errorDiv.classList.add('validator-error');
             if (inputPhone.value === valInp) {
                 console.log(valInp);
-                if (errorDiv) {
+                if (inputPhone.nextElementSibling) {
                     inputPhone.nextElementSibling.remove('validator-error');
                 }
             } else {
-
-                inputPhone.insertAdjacentElement('afterend', errorDiv);
+                if (inputPhone.nextElementSibling) {
+                    inputPhone.nextElementSibling.remove('validator-error');
+                    inputPhone.insertAdjacentElement('afterend', errorDiv);
+                } else {
+                    inputPhone.insertAdjacentElement('afterend', errorDiv);
+                }
 
             }
         });
@@ -465,5 +471,6 @@ window.addEventListener('DOMContentLoaded', () => {
     validPhone(form1);
     validPhone(form2);
     validPhone(form3);
+
 
 });
