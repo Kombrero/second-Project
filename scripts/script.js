@@ -357,61 +357,59 @@ window.addEventListener('DOMContentLoaded', () => {
         form2 = document.getElementById('form2'),
         form3 = document.getElementById('form3');
 
-    const sendForm = form => {
-        new Promise(() => {
+    const errorMessage = 'Что-то пошло не так',
+        loadMessage = 'Загрузка ...',
+        successMessage = 'Спасибо! Мы скоро с вами свяжемся';
 
-            const errorMessage = 'Что-то пошло не так',
-                loadMessage = 'Загрузка ...',
-                successMessage = 'Спасибо! Мы скоро с вами свяжемся';
+    const statusMessagge = document.createElement('div');
+    statusMessagge.style.cssText = 'font-size: 2rem; color: blue;';
 
-            const statusMessagge = document.createElement('div');
-            statusMessagge.style.cssText = 'font-size: 2rem; color: blue;';
+    const sendForm = (form => {
+        const postData = (body => fetch('server.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body)
+        }));
 
-            form.addEventListener('submit', event => {
-                event.preventDefault();
-                form.appendChild(statusMessagge);
 
-                const request = new XMLHttpRequest();
+        form.addEventListener('submit', event => {
+            event.preventDefault();
+            form.appendChild(statusMessagge);
 
-                request.addEventListener('readystatechange', () => {
-                    statusMessagge.textContent = loadMessage;
+            const formData = new FormData(form);
+            const body = {};
 
-                    if (request.readyState !== 4) {
-                        return;
+            formData.forEach((val, key) => {
+                body[key] = val;
+            });
+
+            statusMessagge.textContent = loadMessage;
+
+            postData(body)
+                .then(response => {
+                    if (response.status !== 200) {
+                        console.log(response.statusText);
+                        throw new Error('status network not 200');
                     }
-                    if (request.status === 200) {
-                        statusMessagge.textContent = successMessage;
-                    } else {
-                        statusMessagge.textContent = errorMessage;
-                    }
-
+                    console.log(response);
+                    statusMessagge.textContent = successMessage;
                     if (statusMessagge.textContent === successMessage) {
                         setTimeout(() => statusMessagge.remove(), 5000);
                     }
+                })
+                .catch(error => {
+                    statusMessagge.textContent = errorMessage;
+                    console.error(error);
                 });
 
-                request.open('POST', 'server.php');
-                request.setRequestHeader('Content-Type', 'application/json');
-                const formData = new FormData(form);
-                const body = {};
-
-                formData.forEach((val, key) => {
-                    body[key] = val;
-                });
-
-                console.log(body);
-
-                request.send(JSON.stringify(body));
-
-                const input = form.querySelectorAll('input');
-                input.forEach(elem => {
-                    elem.value = '';
-                });
-
+            const input = form.querySelectorAll('input');
+            input.forEach(elem => {
+                elem.value = '';
             });
         });
-
-    };
+    });
 
     sendForm(form1);
     sendForm(form2);
