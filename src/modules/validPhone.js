@@ -26,5 +26,5 @@ const validPhone = form => {
     });
 
 };
-
+//
 export default validPhone;
