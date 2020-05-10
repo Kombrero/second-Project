@@ -36,8 +36,8 @@ export default function countTimer(deadline){
                 timerSeconds.textContent = timer.seconds < 10 ? '0' + timer.seconds : timer.seconds;
             }, 1000);
         } else {
-            timerHours.textContent = '01';
-            timerMinutes.textContent = '02';
+            timerHours.textContent = '00';
+            timerMinutes.textContent = '00';
             timerSeconds.textContent = '00';
         }
     }

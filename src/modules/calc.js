@@ -12,7 +12,6 @@ const calc = (price = 100) => {
     calcInput.forEach(elem => {
         elem.addEventListener('input', () => {
             elem.value = elem.value.replace(/\D/gi, ' ');
-            console.log(elem.value);
         });
 
     });
@@ -27,10 +26,13 @@ const calc = (price = 100) => {
             countValue += (calcCount.value - 1) / 10;
         }
 
-        if (calcDay && calcDay.value < 5) {
+        if (calcDay && calcDay.value < 5 && calcDay.value !== '')  {
             dayValue *= 2;
-        } else if (calcDay && calcDay.value < 10) {
+            
+        } else if (calcDay && calcDay.value < 10 && calcDay.value !== '') {
             dayValue *= 1.5;
+        } else {
+            dayValue *= 1;
         }
 
         if (typeValue && squareValue) {

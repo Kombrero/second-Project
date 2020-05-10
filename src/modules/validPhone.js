@@ -1,4 +1,5 @@
 'use strict';
+
 const validPhone = form => {
     const inputPhone = form.querySelector('.form-phone');
 
