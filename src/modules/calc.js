@@ -39,7 +39,7 @@ const calc = (price = 100) => {
             total = price * typeValue * squareValue * countValue * dayValue;
         }
 
-        console.log(total);
+        
         totalValue.textContent = Math.floor(total);
         
     };
