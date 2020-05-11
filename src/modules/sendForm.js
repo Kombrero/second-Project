@@ -33,10 +33,8 @@ form.addEventListener('submit', event => {
     postData(body)
         .then(response => {
             if (response.status !== 200) {
-                console.log(response.statusText);
                 throw new Error('status network not 200');
             }
-            console.log(response);
             statusMessagge.textContent = successMessage;
             if (statusMessagge.textContent === successMessage) {
                 setTimeout(() => statusMessagge.remove(), 5000);

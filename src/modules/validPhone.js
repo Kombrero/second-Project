@@ -10,7 +10,6 @@ const validPhone = form => {
         errorDiv.style.cssText = 'color: red;';
         errorDiv.classList.add('validator-error');
         if (inputPhone.value === valInp) {
-            console.log(valInp);
             if (inputPhone.nextElementSibling) {
                 inputPhone.nextElementSibling.remove('validator-error');
             }

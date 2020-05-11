@@ -5,6 +5,7 @@ import 'nodelist-foreach-polyfill';
 import elementClosest from 'element-closest';
 import 'formdata-polyfill';
 import 'es6-promise';
+
 elementClosest(window);
 
 import countTimer from './modules/countTimer';
@@ -16,6 +17,8 @@ import calc from './modules/calc';
 import sendForm from './modules/sendForm';
 import inputSimbol from './modules/inputSimbol';
 import validPhone from './modules/validPhone';
+import './modules/append-polyfill';
+//import SliderCarousel from './modules/sliderCarousel';
 
 
 
@@ -61,3 +64,4 @@ inputSimbol();
 validPhone(form1);
 validPhone(form2);
 validPhone(form3);
+
