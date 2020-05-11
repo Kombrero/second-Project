@@ -54,8 +54,12 @@ class SliderCarousel {
     }
 
     addStyle() {
-        const style = document.createElement('style');
-        style.id = 'sliderCarousel-style';
+        let style = document.getElementById('sliderCarousel-style');
+        if (!style) {
+            style = document.createElement('style');
+            style.id = 'sliderCarousel-style';
+        }
+
         style.textContent = `
             .glo-slider{
                 overflow: hidden !important;
@@ -146,16 +150,22 @@ class SliderCarousel {
             const widthWindow = document.documentElement.clientWidth;
             if (widthWindow < maxResponse) {
                 for (let i = 0; i < allResponse.length; i++) {
-                    this.slidesToShow = this.responsive[i].slidesToShow;
-                    this.options.widthSlide = Math.floor(100 / this.slides);
-                    this.addStyle();
+                    if (widthWindow < allResponse[i]) {
+                        this.slidesToShow = this.responsive[i].slidesToShow;
+                        this.options.widthSlide = Math.floor(100 / this.slidesToShow);
+                        this.addStyle();
+                    }
                 }
+            } else {
+                this.slidesToShow = slidesToShowDefault;
+                this.options.widthSlide = Math.floor(100 / this.slidesToShow);
+                this.addStyle();
             }
         };
 
         checkResponse();
 
+        window.addEventListener('resize', checkResponse);
+
     }
 }
-
-//export default SliderCarousel;
